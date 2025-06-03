@@ -10,13 +10,13 @@ if (typeof ed.etc.sha512Sync === 'undefined') {
   ed.etc.sha512Async = (...m) => Promise.resolve(sha512sync(...m));
 }
 
-// Ed25519 密钥对类型定义
+// Ed25519 key pair type definition
 export interface KeyPair {
   privateKey: Uint8Array;
   publicKey: Uint8Array;
 }
 
-// 签名结果类型定义
+// Signature result type definition
 export interface SignResult {
   hash: string;
   signature: string;
@@ -24,8 +24,8 @@ export interface SignResult {
 }
 
 /**
- * 生成 Ed25519 密钥对
- * @returns 返回包含私钥和公钥的对象
+ * Generate Ed25519 key pair
+ * @returns Object containing private and public keys
  */
 export async function generateKeyPair(): Promise<KeyPair> {
   const privateKey = ed.utils.randomPrivateKey();
@@ -38,10 +38,10 @@ export async function generateKeyPair(): Promise<KeyPair> {
 }
 
 /**
- * 对消息进行哈希和签名
- * @param message 要签名的消息
- * @param privateKey 私钥（可选，如果不提供则生成新的密钥对）
- * @returns 包含哈希值、签名和公钥的对象
+ * Hash and sign a message
+ * @param message Message to sign
+ * @param privateKey Private key (optional, will generate new key pair if not provided)
+ * @returns Object containing hash, signature and public key
  */
 export async function hashAndSign(message: string, privateKey?: Uint8Array): Promise<SignResult> {
   // 如果没有提供私钥，则生成新的密钥对
@@ -53,11 +53,10 @@ export async function hashAndSign(message: string, privateKey?: Uint8Array): Pro
     keyPair = await generateKeyPair();
   }
 
-  // 计算 SHA-256 哈希
+  // Calculate SHA-256 hash
   const messageBytes = new TextEncoder().encode(message);
   const hash = sha256(messageBytes);
 
-  // 使用 Ed25519 签名哈希值
   const hashBytes = new Uint8Array(ed.etc.hexToBytes(hash));
   const signature = await ed.sign(hashBytes, keyPair.privateKey);
 
@@ -66,18 +65,18 @@ export async function hashAndSign(message: string, privateKey?: Uint8Array): Pro
     signature: Buffer.from(signature).toString('base64'),
     publicKey: Buffer.from(keyPair.publicKey).toString('base64'),
   };
-}
+};
 
 /**
- * 验证签名
- * @param message 原始消息
- * @param signature 签名（base64编码）
- * @param publicKey 公钥（base64编码）
- * @returns 验证结果（布尔值）
+ * Verify signature
+ * @param message Original message
+ * @param signature Signature to verify (base64)
+ * @param publicKey Public key for verification (base64)
+ * @returns Whether verification was successful
  */
 export async function verifySignature(message: string, signature: string, publicKey: string): Promise<boolean> {
   try {
-    // 计算消息的 SHA-256 哈希
+    // Calculate SHA-256 hash
     const messageBytes = new TextEncoder().encode(message);
     const hash = sha256(messageBytes);
     const hashBytes = new Uint8Array(ed.etc.hexToBytes(hash));
@@ -89,24 +88,24 @@ export async function verifySignature(message: string, signature: string, public
     // 验证签名
     return await ed.verify(signatureBytes, hashBytes, publicKeyBytes);
   } catch (error) {
-    console.error('签名验证失败:', error);
+    console.error('Signature verification error:', error);
     return false;
   }
 }
 
 /**
- * 将 Uint8Array 转换为 base64 字符串
- * @param bytes 字节数组
- * @returns base64 字符串
+ * Convert Uint8Array to base64 string
+ * @param bytes Byte array
+ * @returns base64 string
  */
 export function bytesToBase64(bytes: Uint8Array): string {
   return Buffer.from(bytes).toString('base64');
 }
 
 /**
- * 将 base64 字符串转换为 Uint8Array
- * @param base64 base64 字符串
- * @returns 字节数组
+ * Convert base64 string to Uint8Array
+ * @param base64 base64 string
+ * @returns Byte array
  */
 export function base64ToBytes(base64: string): Uint8Array {
   return new Uint8Array(Buffer.from(base64, 'base64'));

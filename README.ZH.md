@@ -22,7 +22,7 @@
 
 ### 环境要求
 
-- Node.js >= 16
+- Node.js >= 18
 - npm 或 yarn
 - Expo CLI
 

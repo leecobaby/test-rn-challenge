@@ -39,7 +39,7 @@ export const platformStyles = StyleSheet.create({
     }),
     shadowColor: Platform.select({
       ios: '#000',
-      android: 'transparent', // Android 使用 elevation
+      android: 'transparent',
       web: '#rgba(0,0,0,0.1)',
       default: 'transparent',
     }),

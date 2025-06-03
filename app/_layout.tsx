@@ -6,6 +6,7 @@ import { Provider, useAtom } from 'jotai';
 import { StatusBar } from 'expo-status-bar';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 
+import { isIOS } from '@/utils/platform';
 import { colorSchemeAtom } from '@/store/atomState';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
@@ -36,9 +37,15 @@ function RootLayoutContent() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
           <Stack.Screen
-            name="+not-found"
+            name="profile-modal"
             options={{
               presentation: 'modal',
+              headerShown: !isIOS(),
+              headerBackVisible: true,
+              headerStyle: {
+                backgroundColor: '#f3f4f6',
+              },
+              headerTintColor: '#374151',
             }}
           />
         </Stack>

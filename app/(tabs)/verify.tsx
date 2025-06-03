@@ -1,17 +1,7 @@
 import React from 'react';
+import { useAtom } from 'jotai';
 import { ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useAtom } from 'jotai';
-
-import { Button, ButtonText } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Heading } from '@/components/ui/heading';
-import { Text } from '@/components/ui/text';
-import { Textarea, TextareaInput } from '@/components/ui/textarea';
-import { Input, InputField } from '@/components/ui/input';
-import { VStack } from '@/components/ui/vstack';
-import { HStack } from '@/components/ui/hstack';
-import { Box } from '@/components/ui/box';
 
 import {
   verifyMessageAtom,
@@ -20,8 +10,16 @@ import {
   verifyResultAtom,
   isVerifyingAtom,
 } from '@/store/atomState';
-
 import { verifySignature } from '@/utils/crypto';
+import { Box } from '@/components/ui/box';
+import { Card } from '@/components/ui/card';
+import { Text } from '@/components/ui/text';
+import { VStack } from '@/components/ui/vstack';
+import { HStack } from '@/components/ui/hstack';
+import { Heading } from '@/components/ui/heading';
+import { Input, InputField } from '@/components/ui/input';
+import { Button, ButtonText } from '@/components/ui/button';
+import { Textarea, TextareaInput } from '@/components/ui/textarea';
 
 export default function VerifyScreen() {
   const [message, setMessage] = useAtom(verifyMessageAtom);
@@ -30,20 +28,20 @@ export default function VerifyScreen() {
   const [verifyResult, setVerifyResult] = useAtom(verifyResultAtom);
   const [isVerifying, setIsVerifying] = useAtom(isVerifyingAtom);
 
-  // 验证签名处理函数
+  // Signature verification handler
   const handleVerify = async () => {
     if (!message.trim()) {
-      Alert.alert('错误', '请输入要验证的消息');
+      Alert.alert('Error', 'Please enter a message to verify');
       return;
     }
 
     if (!publicKey.trim()) {
-      Alert.alert('错误', '请输入公钥');
+      Alert.alert('Error', 'Please enter a public key');
       return;
     }
 
     if (!signature.trim()) {
-      Alert.alert('错误', '请输入签名');
+      Alert.alert('Error', 'Please enter a signature');
       return;
     }
 
@@ -52,15 +50,15 @@ export default function VerifyScreen() {
       const result = await verifySignature(message, signature, publicKey);
       setVerifyResult(result);
     } catch (error) {
-      console.error('验证过程中发生错误:', error);
-      Alert.alert('错误', '验证过程中发生错误，请检查输入格式');
+      console.error('Error during verification:', error);
+      Alert.alert('Error', 'An error occurred during verification, please check the input format');
       setVerifyResult(false);
     } finally {
       setIsVerifying(false);
     }
   };
 
-  // 清空所有输入
+  // Clear all inputs
   const handleClear = () => {
     setMessage('');
     setPublicKey('');
@@ -73,23 +71,23 @@ export default function VerifyScreen() {
       <ScrollView className="flex-1">
         <Box className="p-4">
           <VStack space="lg">
-            {/* 页面标题 */}
+            {/* Page Title */}
             <Box className="mb-2">
               <Heading size="xl" className="text-typography-900">
-                签名验证
+                Signature Verification
               </Heading>
               <Text size="sm" className="text-typography-500 mt-1">
-                输入消息、公钥和签名来验证签名的有效性
+                Enter message, public key and signature to verify the signature validity
               </Text>
             </Box>
 
-            {/* 消息输入卡片 */}
+            {/* Message Input Card */}
             <Card className="p-4">
               <VStack space="md">
-                <Heading size="md">消息内容</Heading>
+                <Heading size="md">Message Content</Heading>
                 <Textarea size="lg">
                   <TextareaInput
-                    placeholder="请输入要验证的消息..."
+                    placeholder="Enter message to verify..."
                     value={message}
                     onChangeText={setMessage}
                     className="min-h-24"
@@ -98,27 +96,27 @@ export default function VerifyScreen() {
               </VStack>
             </Card>
 
-            {/* 验证信息输入卡片 */}
+            {/* Verification Info Input Card */}
             <Card className="p-4">
               <VStack space="md">
-                <Heading size="md">验证信息</Heading>
+                <Heading size="md">Verification Info</Heading>
 
                 <VStack space="sm">
                   <Text size="sm" className="text-typography-700 font-medium">
-                    公钥 (Base64)
+                    Public Key (Base64)
                   </Text>
                   <Input size="lg">
-                    <InputField placeholder="请输入公钥..." value={publicKey} onChangeText={setPublicKey} />
+                    <InputField placeholder="Enter public key..." value={publicKey} onChangeText={setPublicKey} />
                   </Input>
                 </VStack>
 
                 <VStack space="sm">
                   <Text size="sm" className="text-typography-700 font-medium">
-                    签名 (Base64)
+                    Signature (Base64)
                   </Text>
                   <Textarea size="lg">
                     <TextareaInput
-                      placeholder="请输入签名..."
+                      placeholder="Enter signature..."
                       value={signature}
                       onChangeText={setSignature}
                       className="min-h-20"
@@ -128,25 +126,25 @@ export default function VerifyScreen() {
               </VStack>
             </Card>
 
-            {/* 验证结果显示 */}
+            {/* Verification Result Display */}
             {verifyResult !== null && (
               <Card
                 className={`p-4 ${verifyResult ? 'border-success-300 bg-success-50' : 'border-error-300 bg-error-50'}`}>
                 <VStack space="sm">
                   <Heading size="md" className={verifyResult ? 'text-success-700' : 'text-error-700'}>
-                    验证结果
+                    Verification Result
                   </Heading>
                   <Text size="lg" className={`font-semibold ${verifyResult ? 'text-success-700' : 'text-error-700'}`}>
-                    {verifyResult ? '✅ 签名有效' : '❌ 签名无效'}
+                    {verifyResult ? '✅ Signature Valid' : '❌ Signature Invalid'}
                   </Text>
                 </VStack>
               </Card>
             )}
 
-            {/* 操作按钮 */}
+            {/* Action Buttons */}
             <HStack space="md" className="pt-2">
               <Button variant="solid" action="primary" className="flex-1" onPress={handleVerify} disabled={isVerifying}>
-                <ButtonText>{isVerifying ? '验证中...' : '验证签名'}</ButtonText>
+                <ButtonText>{isVerifying ? 'Verifying...' : 'Verify Signature'}</ButtonText>
               </Button>
 
               <Button
@@ -155,7 +153,7 @@ export default function VerifyScreen() {
                 className="flex-1"
                 onPress={handleClear}
                 disabled={isVerifying}>
-                <ButtonText>清空</ButtonText>
+                <ButtonText>Clear</ButtonText>
               </Button>
             </HStack>
           </VStack>

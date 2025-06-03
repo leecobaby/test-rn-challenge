@@ -14,7 +14,7 @@ import {
 // Mock Platform for testing
 jest.mock('react-native', () => ({
   Platform: {
-    OS: 'web', // 默认测试 web 平台
+    OS: 'web',
     Version: '1.0.0',
     select: jest.fn(),
   },
@@ -22,8 +22,8 @@ jest.mock('react-native', () => ({
 
 describe('Platform Detection Utils', () => {
   beforeEach(() => {
-    // 重置所有 mock
     jest.clearAllMocks();
+    // Reset all mocks
   });
 
   describe('Basic Platform Detection', () => {
