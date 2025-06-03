@@ -32,7 +32,7 @@ jobs:
         run: npm run lint
         
       - name: Build for web
-        run: npx expo export:web
+        run: npx expo export -p web
         
       - name: Setup Pages
         uses: actions/configure-pages@v4
