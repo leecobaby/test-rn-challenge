@@ -1,44 +1,33 @@
-import React from 'react';
 import { Tabs } from 'expo-router';
-import { useAtomValue } from 'jotai';
-import { Platform } from 'react-native';
+import React from 'react';
 
 import { Colors } from '@/constants/Colors';
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { colorSchemeAtom } from '@/store/atomState';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 
 export default function TabLayout() {
-  const colorScheme = useAtomValue(colorSchemeAtom);
+  const colorScheme = useColorScheme();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: '签名',
+          tabBarIcon: ({ color, focused }) => <TabBarIcon name={focused ? 'pencil' : 'pencil-outline'} color={color} />,
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="verify"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: '验证',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'checkmark-circle' : 'checkmark-circle-outline'} color={color} />
+          ),
         }}
       />
     </Tabs>
