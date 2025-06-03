@@ -53,11 +53,14 @@ npm start
 ### Build & Deploy
 
 ```bash
-# Build Web version
-npx expo export:web
+# Build Web version (Metro bundler)
+npx expo export -p web
 
-# Build production version
-npx expo build:web
+# Serve locally for testing
+npx expo serve
+
+# Build for all platforms
+npx expo export
 ```
 
 ## 🔐 Cryptographic Algorithms
@@ -332,28 +335,6 @@ eas channel:view [channel-name]
 - **Channel mismatch**: Verify channel configuration in build
 - **Network issues**: Test with different network conditions
 - **Cache problems**: Clear app data or reinstall build
-
-## 🚀 Deployment
-
-### GitHub Pages Deployment
-
-1. Build Web version:
-```bash
-npx expo export:web
-```
-
-2. Configure GitHub Actions (refer to `.github/workflows/deploy.yml`)
-
-3. Push to GitHub repository for automatic deployment to GitHub Pages
-
-### Manual Deployment
-
-1. Build project:
-```bash
-npx expo export:web
-```
-
-2. Deploy the `dist/` directory to any static file server
 
 ## 📝 Development Notes
 

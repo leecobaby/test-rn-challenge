@@ -52,10 +52,12 @@ npm start
 
 ```bash
 # 构建 Web 版本
-npx expo export:web
+npx expo export -p web
 
-# 构建生产版本
-npx expo build:web
+npx expo export
+
+npx expo serve
+
 ```
 
 ## 🔐 加密算法
@@ -173,28 +175,6 @@ npm run lint
 # 类型检查
 npx tsc --noEmit
 ```
-
-## 🚀 部署
-
-### GitHub Pages 部署
-
-1. 构建 Web 版本：
-```bash
-npx expo export:web
-```
-
-2. 配置 GitHub Actions（参考 `.github/workflows/deploy.yml`）
-
-3. 推送到 GitHub 仓库，自动部署到 GitHub Pages
-
-### 手动部署
-
-1. 构建项目：
-```bash
-npx expo export:web
-```
-
-2. 将 `dist/` 目录部署到任意静态文件服务器
 
 ## 📝 开发说明
 
